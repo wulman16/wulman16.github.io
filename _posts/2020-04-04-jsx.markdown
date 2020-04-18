@@ -1,0 +1,84 @@
+---
+layout: post
+title:  JSX and Ternary Expressions
+date:   2020-04-04 00:00:00 -0400
+categories:
+---
+Web developers who are using React.js for the first time as their front-end library of choice may be alarmed by JSX, an unfamiliar syntax that looks like the product of a mad scientist who fused HTML and JavaScript together in the laboratory. Although you aren't obligated to use it in your React application, JSX comes with a number of benefits. Not only are there performance optimizations that happen under the hood in JSX, but code written in JSX more closely corresponds syntactically to what your application will actually look like. Once you get comfortable with reading and writing JSX, you will likely appreciate it despite its quirks.
+
+One of those quirks has to do with conditional rendering. Whenever I have to handle conditional logic in JavaScript, the tool I tend to reach for first is an if-else statement. I usually favor legibility over concision as a developer, and even if I know my audience will be intimately familiar with switch cases, ternaries, and the logical `&&`, I can rest assured that everyone will instantly recognize what an if-else is doing, without having to pause for any mental translation.
+
+In JSX, however, there is a major barrier that you should be aware of before you reach for if-else syntax in your conditional rendering. To use a simple example, let's say that we have an app that displays a list of user profile cards. Each card has a front side, displaying the user's profile picture, and a back side, displaying the user's name. Depending on whether or how many times a card has been clicked, our app displays either the front or back of the card.
+
+Because we are handling some conditional logic in this process, you may immediately think to use an if-else. In JSX, however, the following syntax is not valid:
+
+~~~
+/* WARNING: INVALID CODE */
+
+import React from ‘react’
+
+const UserCard = (props) => {
+  return(
+    <div className="userCard"
+      onClick={ () => {props.handleClick(props.user.id)} } >
+      { if (props.user.clicked) { <BackContent user={props.user.name}/>
+        } else { <FrontContent user={props.user.image}/> } }
+    </div>
+  )
+}
+
+export default UserCard
+~~~
+
+Putting if-else logic inside your return statement will yield an error, but putting ternary logic inside your return statement will work beautifully. Behold:
+
+~~~
+import React from ‘react’
+
+const UserCard = (props) => {
+  return(
+    <div className="userCard"
+      onClick={ () => {props.handleClick(props.user.id)} } >
+      { props.user.clicked 
+          ? <BackContent user={props.user.name}/>
+          : <FrontContent user={props.user.image}/> }
+    </div>
+  )
+}
+
+export default UserCard
+~~~
+
+Why is this the case? The difference hinges on the difference in JavaScript between an expression and a statement. An expression is any piece of code that can be immediately evaluated to a value. A statement is an instruction to perform a series of one or more steps. A ternary expression is an expression and an if-else statement is, well, a statement. Because JSX expects *expressions* inside each pair of curly brackets, only ternary logic would work in this situation.
+
+If a component in your React application calls for very complex conditional rendering, you can still use an if-else statement, but its result must be assigned to a value, which is then used inside the return statement:
+
+~~~
+import React from ‘react’
+const UserCard = (props) => {
+  let content
+  if (props.user.clicked) {
+    content = <BackContent user= {props.user.name} />
+  } else {
+    content = <FrontContent user={props.user.image} />
+  }
+  return(
+    <div className="userCard"
+      onClick={ () => {props.handleClick(props.user.id)} } >
+      { content }
+    </div>
+  )
+}
+export default UserCard
+~~~
+
+You can follow a similar principle if you need to use a switch statement or declare an enum to handle your conditional rendering.
+
+All of this goes to show that although JSX is technically a syntactic extension of JavaScript, its quirks can end up clarifying basic features of the language and strengthen your understanding of it.
+
+<h2 class="post-subheading">Further reading</h2>
+- [If-Else in JSX](https://react-cn.github.io/react/tips/if-else-in-JSX.html)
+- [How to Write if/else Conditional Statements in JSX](http://www.hackingwithreact.com/read/1/7/how-to-write-if-else-conditional-statements-in-jsx)
+- [Conditional Rendering in React using Ternaries and Logical AND](https://medium.freecodecamp.org/conditional-rendering-in-react-using-ternaries-and-logical-and-7807f53b6935)
+- [All React Conditional Rendering Techniques](https://www.robinwieruch.de/conditional-rendering-react/)
+- [JavaScript Expressions and Statements](https://medium.com/launch-school/javascript-expressions-and-statements-4d32ac9c0e74)

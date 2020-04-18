@@ -1,0 +1,103 @@
+---
+layout: post
+title:  "\" cubes\\n Ice\"; or, Why Beginning Programmers Should Learn to Stop Worrying and Love Web APIs"
+date:   2020-03-21 00:00:00 -0400
+categories:
+---
+When first learning a programming language, you tend to focus on the syntactical and conceptual basics: how to write a function, where semicolons go, what a loop does. Eventually, though, you have to move on from the cut-and-dry fundamentals to the tasks that occupy actual developers—that is, designing and writing programs. Embarking on your very first projects as a programmer can be exciting, but it can also be daunting. After a certain point, though, you have to venture away from the treadmill of tutorials and exercises and into the jungle of real software development. In the course of developing my first command-line application in Ruby over a year ago, I discovered that [web APIs](https://www.freecodecamp.org/news/what-is-an-api-in-english-please-b880a3214a82/) can offer the beginner a perfect point of entry.
+
+Why? Because APIs provide access to gobs of authentic data, much of which is intrinsically interesting or useful. From the [works of art in the Metropolitan Museum](https://metmuseum.github.io/) to [decades of world climate data](https://datahelpdesk.worldbank.org/knowledgebase/articles/902061-climate-data-api), from the [entire repository of Cat Facts](https://github.com/alexwohlbruck/cat-facts) to a [corpus of tweets circa 2006](https://developer.twitter.com/en/docs/tweets/search/overview/enterprise), an astounding amount of publicly available data is out there to play with, thanks to APIs.
+
+Think of APIs like the authentic materials you might encounter while learning a foreign language. The grammar lessons, flashcards, and textbook exercises are a practical and necessary vacuum in which to hone the basics, but the best way to get fluent quickly is to get out there and talk to native speakers. Just as watching foreign soap operas and writing to international pen pals can get you further than doing classroom drills alone, using APIs can put you in the mindset of a programmer by giving you a taste of the kind of data that they might actually work with.
+
+There are [many](https://www.programmableweb.com/category/all/apis?order=field_popularity), [many](https://github.com/public-apis/public-apis) APIs out there, and some are better for beginners than others. When I was looking for data to analyze in my first Ruby project, many of the intriguing APIs either cost money, required a lengthy approval process, or organized their data in ways complicated enough to forbid me from getting my project off the ground in less than a day or two. Luckily, I stumbled upon [TheCocktailDB](https://www.thecocktaildb.com/api.php), a database of drink recipes that provided free access in a very friendly JSON format—no API key required. With a set of real-life data that I could interact with using a few basic commands (and the indispensable `json` and `rest-client` gems), I was suddenly able to hone my new Ruby skills against an exciting dataset.
+
+One terrific benefit of APIs, I learned, is that you’re suddenly thrust into dealing with someone else’s code, which might be opaque or inconsistent or incomplete. You start running into real problems that curricular exercises, by nature, tend to abstract away. To return to the foreign language analogy, you’re no longer learning from universal linguistic rules, but rather dealing with the quirks of someone’s idiolect. It's precisely through dealing with those quirks, though, that you can begin to think through and solve problems like a programmer. And APIs provide programmers with a strict enough standard of communication so that a beginner won't be completely discouraged.
+
+One important thing I learned in the course of that project was how to tame an unruly dataset. Most of the cocktail API's recipes were consistent enough, but there were holes: drink recipes sometimes listed ingredients with no amounts; some drinks had duplicate recipes due to discrepant capitalizations (e.g., "Tequila Sunrise" and "Tequila sunrise"); some ingredients had descriptions, but others did not. I discovered one of the most baffling problems when I was testing my `#recipe method`, which collects and prints to the command line a given drink's name, category, ingredients, and instructions. Here's the recipe card I generated for something I scraped called "Arctic Mouthwash":
+
+~~~
+arctic mouthwash
+
+category: punch / party drink
+
+5 oz blue maui
+5 oz mountain dew
+cubes ice
+
+blend all ingredients in a blender on high until ice is finely crushed.
+it should be of a slushy consistency.
+pour immediately and serve.
+~~~
+
+
+I cannot vouch for the mixological quality of these recipes, but I can say that a recipe should never list "cubes ice" as an ingredient. What was happening? One look at the JSON file told me everything:
+
+~~~
+{
+  "drinks": [
+    {
+      "idDrink": "17118",
+      "strDrink": "Arctic Mouthwash",
+      "strDrinkES": null,
+      "strDrinkDE": null,
+      "strDrinkFR": null,
+      "strDrinkZH-HANS": null,
+      "strDrinkZH-HANT": null,
+      "strVideo": null,
+      "strCategory": "Punch / Party Drink",
+      "strIBA": null,
+      "strAlcoholic": "Alcoholic",
+      "strGlass": "Cocktail glass",
+      "strInstructions": "Blend all ingredients in a blender on high until ice is finely crushed. It should be of a slushy consistency. Pour immediately and serve.",
+      "strInstructionsES": null,
+      "strInstructionsDE": null,
+      "strInstructionsFR": null,
+      "strInstructionsZH-HANS": null,
+      "strInstructionsZH-HANT": null,
+      "strDrinkThumb": "https://www.thecocktaildb.com/images/media/drink/wqstwv1478963735.jpg",
+      "strIngredient1": "Maui",
+      "strIngredient2": "Mountain Dew",
+      "strIngredient3": "Ice",
+      "strIngredient4": "",
+      "strIngredient5": "",
+      "strIngredient6": "",
+      "strIngredient7": "",
+      "strIngredient8": "",
+      "strIngredient9": "",
+      "strIngredient10": "",
+      "strIngredient11": "",
+      "strIngredient12": "",
+      "strIngredient13": "",
+      "strIngredient14": "",
+      "strIngredient15": "",
+      "strMeasure1": "5 oz blue ",
+      "strMeasure2": "5 oz ",
+      "strMeasure3": " cubes\n",
+      "strMeasure4": "\n",
+      "strMeasure5": "\n",
+      "strMeasure6": "\n",
+      "strMeasure7": "\n",
+      "strMeasure8": "\n",
+      "strMeasure9": "",
+      "strMeasure10": "",
+      "strMeasure11": "",
+      "strMeasure12": "",
+      "strMeasure13": "",
+      "strMeasure14": "",
+      "strMeasure15": "",
+      "dateModified": "2016-11-12 15:15:35"
+    }
+  ]
+}
+~~~
+
+"Cubes" was listed as a measurement! Or, `" cubes\n"`, to be more precise. The way I was interpolating the ingredients into a string was clearly not going to work:
+~~~
+"#{ingredient_amounts[i]} #{ingredient_names[i]}"
+~~~
+I ended up having to check whether a given amount was simply "cubes," and then reformat that line accordingly.
+
+While it was annoying, handling all of the edge cases really strengthened my skills as a programmer. I became aware of how thoroughly I should test my data, and how carefully I should be thinking about how I'm scraping the data. I also had to think about how to normalize the data as elegantly and legibly as I could. In fact, it was mostly through refactoring my code that I discovered many of these bugs in the first place. Much less than a stumbling block, the API's unruliness turned out to be one of its virtues.
+
+So, don't be afraid of working with authentic datasets as a beginning programmer. Their quirks may be frustrating, but they will only bolster your skills in the end.

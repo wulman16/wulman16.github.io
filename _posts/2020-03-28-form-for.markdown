@@ -1,0 +1,139 @@
+---
+layout: post
+title:  "form_for: What’s it for?"
+date:   2020-03-28 00:00:00 -0400
+categories:
+---
+Out of the many useful tools that Ruby on Rails affords a web developer, `form_for` is perhaps one of the most magical. But it can be a tricky tool to use when the associations between your models are complicated. In this short article, I'll explain when to use `form_for` and how to use it in a couple of different scenarios.
+
+<h2 class="post-subheading">form_tag vs. form_for</h2>
+
+Along with the newer and shinier [`form_with`](https://medium.com/@tinchorb/form-with-building-html-forms-in-rails-5-1-f30bd60ef52d), `form_tag` and `form_for` are the standard tools for generating HTML forms in Rails. The same form can often be created in a Rails app using either `form_tag` or `form_for`. We can see this in an example of a basic workout application, in which a user can create a new exercise with just a name:
+
+~~~
+<% # app/views/exercises/new.html.erb %>
+
+<h3>Create a New Exercise</h3>
+
+<%= form_tag exercises_path do %>
+  <label>Exercise name:</label><br>
+  <%= text_field_tag :'exercise[name]' %><br>
+  <%= submit_tag "Submit Exercise" %>
+<% end %>
+~~~
+
+The `form_tag` syntax can be refactored into the following `form_for` syntax:
+
+~~~
+<% # app/views/exercises/new.html.erb %>
+
+<h3>Create a New Exercise</h3>
+
+<%= form_for(@exercise) do |f| %>
+  <label>Exercise name:</label><br>
+  <%= f.text_field :name %><br>
+  <%= f.submit %>
+<% end %>
+~~~
+
+Each ERB file will generate the exact same HTML:
+
+~~~
+<h3>Create a New Exercise</h3>
+
+<form action="/exercises" accept-charset="UTF-8" method="post">
+  <input name="utf8" type="hidden" value="&#x2713;" />
+  <input type="hidden" name="authenticity_token" value="vq9SMVNk0CjwgZmYomFRhwbo5dfu7tI/2FiR7jOtlVgbj8r/zOO5oL+arU9N4PMm7WqxbUbXg4wqneW02ZfpMw==" />
+  <label>Exercise name:</label><br>
+  <input type="text" name="exercise[name]" id="exercise_name" /><br>
+  <input type="submit" name="commit" value="Submit Exercise" />
+</form>
+~~~
+
+So when should you use `form_for` instead of `form_tag`? `form_for` is perfect when:
+
+1. The form is manipulating your models directly.
+2. Your application follows RESTful conventions.
+
+When you have many fields in your form, `form_for` prevents you from having to make multiple calls to the instance variable associated with the form. This benefit is not obvious in the above example, but when your form is editing several attributes of an object at once, `form_for` only makes a call to the instance variable once at the top of the loop, which will shave some running time off your application. And as long as your application uses standard RESTful routes, `form_for` is smart enough to take care of the routing for you, so that you can devote more attention to the form itself.
+
+When your situation does not meet the two conditions listed above, `form_tag` is probably a better choice. `form_tag` offers you the flexibility to specify your own routing, and it is especially appropriate for things like search forms or contact forms (i.e., when there is no associated model).
+
+<h2 class="post-subheading">Complex associations with form_for</h2>
+
+When the relationships between your models become more complicated, using `form_for` can become tricky. For example, let's say that in our workout application, we want to be able to create a workout and list its associated exercises in a single form. A workout has many workout exercises and has many exercises through workout exercises. For a `has_many, through:` relationship, the `form_for` can become quite complex. Here is the view for a new workout form and the corresponding controller methods:
+
+~~~
+<% # app/views/workouts/new.html.erb %>
+
+<%=form_for(@workout) do |f| %>
+  <%= f.label :name %>
+  <%= f.text_field :name%><br> <br>
+
+  <%= f.fields_for :workout_exercises, 5.times{@workout.workout_exercises.build} do |we| %>
+    <%= we.label :exercise %>
+    <%= we.collection_select :exercise_id, 
+      Exercise.all,
+      :id,
+      :name,
+      { prompt: true } %> <br>
+    <%= we.label :sets %>
+    <%= we.number_field :sets %><br>
+    <%= we.label :reps %>
+    <%= we.number_field :reps %><br>
+    <%= we.label :weight %>
+    <%= we.text_field :weight %><br> <br>
+  <% end %>
+  
+  <%= f.submit %>
+<% end %>
+
+
+# app/controllers/workouts_controller.rb
+
+class WorkoutsController < ApplicationController
+  def new
+    @workout = Workout.new
+  end
+
+  def create
+    @workout = Workout.new(workout_params)
+    @workout.user_id = session[:user_id]
+    if @workout.valid?
+      @workout.save
+      redirect_to workout_path(@workout)
+    else
+      render :new
+    end
+  end
+end
+~~~
+
+Creating new workout exercises at the same time as a workout is a bit complicated. Here, we have to call the [`fields_for`](https://apidock.com/rails/ActionView/Helpers/FormHelper/fields_for) method on `f` (the [`FormBuilder`](https://apidock.com/rails/ActionView/Helpers/FormBuilder) object generated by `form_for`) in order to say that the following fields are for workout exercises, not the workout itself. Crucially, `fields_for` takes a second argument of `5.times{@workout.workout_exercises.build}`. What this argument does is tell `FormBuilder` to generate the fields five times, and each time, the workout exercise is tied to the `@workout` instance. Without that instance variable, `form_for` will not know to associate the new workout exercises with the new workout.
+
+In order for the attributes of the workout exercise to be passed back into the controller, we must do two things. First, the workout model must be told to accepted the nested attributes for workout exercises:
+
+~~~
+# app/models/workout.rb
+
+class Workout < ApplicationRecord
+  accepts_nested_attributes_for :workout_exercises, :reject_if => :all_blank, :allow_destroy => true
+end
+~~~
+
+Second, the strong params in the workouts controller must include a hash with a key of `workout_exercises_attributes` and a value of an array containing their attribute names (as well as the id of the exercise object that it's connected to):
+
+~~~
+# app/controllers/workouts_controller.rb
+
+class WorkoutsController < ApplicationController
+
+  private
+
+  def workout_params
+    params.require(:workout).permit(:name, :user_id, workout_exercises_attributes: [:exercise_id, :sets, :reps, :weight, :id])
+  end
+end
+~~~
+
+`form_for` can get finicky when your modeling becomes complex, but once you get familiar with its quirks, `form_for` can be a concise and powerful tool to help get your Rails app off the ground quickly.

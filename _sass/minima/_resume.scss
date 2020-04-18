@@ -1,0 +1,36 @@
+.resume-section {
+
+  margin-bottom: 45px;
+
+  .resume-section-heading {
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+
+  .resume-section-subheading {
+    font-size: 1.17rem;
+    margin: 0;
+  }
+
+  .resume-date-range {
+    font-size: 1rem;
+  }
+
+  .resume-skills-list {
+    columns: 2;
+  }
+
+  .skills-category {
+    font-weight: bold;
+  }
+
+  .resume-degree {
+    font-size: 1rem;
+    margin-bottom: 0;
+  }
+
+  .role, .project, .school {
+    font-weight: bold;
+  }
+}
