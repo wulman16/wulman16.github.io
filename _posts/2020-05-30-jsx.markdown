@@ -1,9 +1,10 @@
 ---
 layout: post
-title:  JSX and Ternary Expressions
-date:   2020-04-04 00:00:00 -0400
+title: JSX and Ternary Expressions
+date: 2020-05-30 00:00:00 -0400
 categories:
 ---
+
 Web developers who are using React.js for the first time as their front-end library of choice may be alarmed by JSX, an unfamiliar syntax that looks like the product of a mad scientist who fused HTML and JavaScript together in the laboratory. Although you aren't obligated to use it in your React application, JSX comes with a number of benefits. Not only are there performance optimizations that happen under the hood in JSX, but code written in JSX more closely corresponds syntactically to what your application will actually look like. Once you get comfortable with reading and writing JSX, you will likely appreciate it despite its quirks.
 
 One of those quirks has to do with conditional rendering. Whenever I have to handle conditional logic in JavaScript, the tool I tend to reach for first is an if-else statement. I usually favor legibility over concision as a developer, and even if I know my audience will be intimately familiar with switch cases, ternaries, and the logical `&&`, I can rest assured that everyone will instantly recognize what an if-else is doing, without having to pause for any mental translation.
@@ -12,7 +13,7 @@ In JSX, however, there is a major barrier that you should be aware of before you
 
 Because we are handling some conditional logic in this process, you may immediately think to use an if-else. In JSX, however, the following syntax is not valid:
 
-~~~
+```
 /* WARNING: INVALID CODE */
 
 import React from ‘react’
@@ -28,18 +29,18 @@ const UserCard = (props) => {
 }
 
 export default UserCard
-~~~
+```
 
 Putting if-else logic inside your return statement will yield an error, but putting ternary logic inside your return statement will work beautifully. Behold:
 
-~~~
+```
 import React from ‘react’
 
 const UserCard = (props) => {
   return(
     <div className="userCard"
       onClick={ () => {props.handleClick(props.user.id)} } >
-      { props.user.clicked 
+      { props.user.clicked
           ? <BackContent user={props.user.name}/>
           : <FrontContent user={props.user.image}/> }
     </div>
@@ -47,13 +48,13 @@ const UserCard = (props) => {
 }
 
 export default UserCard
-~~~
+```
 
-Why is this the case? The difference hinges on the difference in JavaScript between an expression and a statement. An expression is any piece of code that can be immediately evaluated to a value. A statement is an instruction to perform a series of one or more steps. A ternary expression is an expression and an if-else statement is, well, a statement. Because JSX expects *expressions* inside each pair of curly brackets, only ternary logic would work in this situation.
+Why is this the case? The difference hinges on the difference in JavaScript between an expression and a statement. An expression is any piece of code that can be immediately evaluated to a value. A statement is an instruction to perform a series of one or more steps. A ternary expression is an expression and an if-else statement is, well, a statement. Because JSX expects _expressions_ inside each pair of curly brackets, only ternary logic would work in this situation.
 
 If a component in your React application calls for very complex conditional rendering, you can still use an if-else statement, but its result must be assigned to a value, which is then used inside the return statement:
 
-~~~
+```
 import React from ‘react’
 const UserCard = (props) => {
   let content
@@ -70,7 +71,7 @@ const UserCard = (props) => {
   )
 }
 export default UserCard
-~~~
+```
 
 You can follow a similar principle if you need to use a switch statement or declare an enum to handle your conditional rendering.
 

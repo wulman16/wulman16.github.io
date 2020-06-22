@@ -4,8 +4,32 @@ layout: default
 
 <div class="home">
   {%- if page.title -%}
-    <h1 class="page-heading">{{ page.title }}</h1>
+  <h1 class="page-heading">{{ page.title }}</h1>
   {%- endif -%}
+
+  <img
+    src="{{site.baseurl}}/assets/img/headshot.jpg"
+    class="headshot"
+    alt="Headshot of Will Ulman"
+  />
+  <div class="home-text-top">
+    I’m a software engineer at Emory University with a background in art
+    history. I'm currently building a digital preservation repository as part of
+    a team at Emory Libraries, using and contributing to open-source engines
+    from the Samvera and Blacklight communities. My experience designing and
+    developing programs has opened up for me a variety of novel technical
+    problems that can't be approached through humanistic inquiry alone. I try to
+    leverage my programming skills, enriched by my arts background, to craft
+    thoughtful and elegant solutions to those problems.
+  </div>
+  <div class="home-text-bottom">
+    Before coming to Emory Libraries, I received a BA from the University of
+    Chicago in 2016 and undertook PhD coursework at Emory. After contributing
+    research to a number of digital humanities projects during my graduate
+    studies, I became fascinated by the technological sides of those projects,
+    and I decided to change careers in order to channel my creative energies
+    through code.
+  </div>
 
   <p>{{- site.description | escape -}}</p>
 
@@ -30,5 +54,4 @@ layout: default
 
     <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | relative_url }}">via RSS</a></p>
   {%- endif -%} -->
-
 </div>
