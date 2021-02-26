@@ -7,17 +7,27 @@ permalink: /resume/
 <section class="resume-section">
   <h1 class="resume-section-heading">Employment</h1>
 
-  <h2 class="resume-section-subheading"><span class="role">Software Engineer</span> — Emory University, Atlanta, GA</h2>
-  <h3 class="resume-date-range"><time datetime="2019-08">August 2019</time> — <time datetime="2020">Present</time></h3>
+  <h2 class="resume-section-subheading"><span class="role">UI / UX Engineer</span> — AXYYS, Inc., Alpharetta, GA</h2>
+  <h3 class="resume-date-range"><time datetime="2020-11">November 2020</time> — <time datetime="2021-02">February 2021</time></h3>
   <ul class="resume-list">
-    <li>Develop software for Emory Libraries’ digital preservation repository in Ruby on Rails</li>
-    <li>Lead front-end development as part of Agile Scrum team</li>
-    <li>Adapt existing atomic-design-based pattern library from Vue.js and Sass to Bootstrap 4 framework</li>
-    <li>Translate wireframes and UI elements from Figma into accessible and semantic front-end interfaces</li>
-    <li>Handle new releases and deployments of software using GitHub and Capistrano</li>
-    <li>Use Apache Solr and Fedora Commons to index object metadata on back end</li>
-    <li>Contribute code back to Samvera and Blacklight open-source communities</li>
-    <li>Follow test-driven development practices with RSpec and Capybara</li>
+    <li>Built middleware using Node.js and TypeScript to recursively deobfuscate, evaluate, and quarantine malicious client-side assets</li>
+    <li>Provided Fortune 500 client robust front-end security against Magecart attacks, saving potentially millions of dollars in legal fines</li>
+    <li>Developed sandbox feature in order to detect keylogging, docstring injections, and form queries on e-commerce site</li>
+    <li>Integrated middleware with Firebase console for cloud storage and logging of resource validation</li>
+    <li>Adapted legacy checkout experience into modern Angular code as part of remotely distributed Scrum team</li>
+  </ul>
+
+  <h2 class="resume-section-subheading"><span class="role">Software Engineer</span> — Emory University, Atlanta, GA</h2>
+  <h3 class="resume-date-range"><time datetime="2019-08">August 2019</time> — <time datetime="2020-11">November 2020</time></h3>
+  <ul class="resume-list">
+    <li>Developed software for Emory Libraries’ digital preservation repository in Ruby on Rails</li>
+    <li>Led front-end development as part of Agile Scrum team</li>
+    <li>Adapted existing atomic-design-based pattern library from Vue.js and Sass to Bootstrap 4 framework</li>
+    <li>Translated wireframes and UI elements from Figma into accessible and semantic front-end interfaces</li>
+    <li>Handled new releases and deployments of software using GitHub and Capistrano</li>
+    <li>Used Apache Solr and Fedora Commons to index object metadata on back end</li>
+    <li>Contributed code back to Samvera and Blacklight open-source communities</li>
+    <li>Followed test-driven development practices with RSpec and Capybara</li>
   </ul>
 
   <h2 class="resume-section-subheading"><span class="role">Teaching Assistant</span> — Emory University, Atlanta, GA</h2>
@@ -65,9 +75,9 @@ permalink: /resume/
   <h2 class="resume-section-subheading skills-category">Languages</h2>
   <p>CSS, HTML5, JavaScript, Ruby, SQL</p>
   <h2 class="resume-section-subheading skills-category">Frameworks</h2>
-  <p>Bootstrap, Express, Node.js, Rails, React</p>
+  <p>Angular, Bootstrap, Express, Node.js, Rails, React, Redux, Vue.js</p>
   <h2 class="resume-section-subheading skills-category">Development Tools</h2>
-  <p>Capybara, CircleCI, Git/GitHub, Jest, Mocha, RSpec</p>
+  <p>Bitbucket, Capybara, CircleCI, Git/GitHub, Jest, Mocha, RSpec</p>
 </section>
 
 <section class="resume-section">
