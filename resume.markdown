@@ -11,8 +11,8 @@ permalink: /resume/
   <h3 class="resume-date-range"><time datetime="2020-11">November 2020</time> — <time datetime="2021-02">February 2021</time></h3>
   <ul class="resume-list">
     <li>Built middleware using Node.js and TypeScript to recursively deobfuscate, evaluate, and quarantine malicious client-side assets</li>
-    <li>Provided Fortune 500 client robust front-end security against Magecart attacks, saving potentially millions of dollars in legal fines</li>
-    <li>Developed sandbox feature in order to detect keylogging, docstring injections, and form queries on e-commerce site</li>
+    <li>Provided Fortune 500 client's e-commerce site robust front-end security against Magecart attacks, saving potentially millions of dollars in legal fines</li>
+    <li>Developed sandbox feature in order to detect keylogging, docstring injections, and form queries from third-party vendors and open-source libraries</li>
     <li>Integrated middleware with Firebase console for cloud storage and logging of resource validation</li>
     <li>Adapted legacy checkout experience into modern Angular code as part of remotely distributed Scrum team</li>
   </ul>
